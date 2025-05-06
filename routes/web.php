@@ -2,7 +2,6 @@
 use Src\Route;
 
 // Главная страница
-Route::add('go', [Controller\Site::class, 'index']);
+Route::add('patient', [Controller\PatientController::class, 'patient']);
 
-// Страница "Hello"
-Route::add('hello', [Controller\Site::class, 'hello']);
+
