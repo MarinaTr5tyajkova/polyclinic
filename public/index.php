@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-try {
-    // Подключаем автозагрузчик Composer
-    require_once __DIR__ . '/../vendor/autoload.php';
+session_start();
 
-    // Инициализируем приложение
+try {
+    //Создаем экземпляр приложения и запускаем его
     $app = require_once __DIR__ . '/../core/bootstrap.php';
     $app->run();
 } catch (\Throwable $exception) {

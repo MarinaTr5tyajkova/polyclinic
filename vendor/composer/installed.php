@@ -3,7 +3,7 @@
         'name' => 'marinatr5tyajkova/polyclinic',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b3d7156042bfe550a00736acc70a10d7fa1880ab',
+        'reference' => '16a286f6c6d6db9c70f0ee76bc59c4dff300b81e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -130,7 +130,7 @@
         'marinatr5tyajkova/polyclinic' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b3d7156042bfe550a00736acc70a10d7fa1880ab',
+            'reference' => '16a286f6c6d6db9c70f0ee76bc59c4dff300b81e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -143,6 +143,17 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../nesbot/carbon',
             'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'nikic/fast-route' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'd3ada013d0f683ad2a8d0614fc97917a6ab72ce9',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../nikic/fast-route',
+            'aliases' => array(
+                0 => '2.0.x-dev',
+            ),
             'dev_requirement' => false,
         ),
         'psr/clock' => array(

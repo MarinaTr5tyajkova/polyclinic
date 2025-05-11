@@ -1,52 +1,118 @@
 <?php
+
 namespace Src;
 
 use Error;
 
-class Route {
-    private static array $routes = [];
-    private static string $prefix = '';
+use FastRoute\RouteCollector;
+use FastRoute\RouteParser\Std;
+use FastRoute\DataGenerator\MarkBased;
+use FastRoute\Dispatcher\MarkBased as Dispatcher;
+use Src\Traits\SingletonTrait;
 
-    public static function setPrefix($value): void {
-        self::$prefix = $value;
+class Route
+{
+    //Используем методы трейта
+    use SingletonTrait;
+
+    //Свойство для хранения текущего маршрута
+    private string $currentRoute = '';
+    private $currentHttpMethod;
+
+    //Свойство для префикса для всех маршрутов
+    private string $prefix = '';
+
+    //Классы для использования внешнего маршрутизатора
+    private RouteCollector $routeCollector;
+
+    //Добавляет маршрут, устанавливает его текущим и возвращает объект
+    public static function add($httpMethod, string $route, array $action): self
+    {
+        self::single()->routeCollector->addRoute($httpMethod, $route, $action);
+        self::single()->currentHttpMethod = $httpMethod;
+        self::single()->currentRoute = $route;
+        return self::single();
     }
 
-    public static function add(string $route, array $action): void {
-        if (!array_key_exists($route, self::$routes)) {
-            self::$routes[$route] = $action;
-        }
+    //Добавляет префикс для обозначенных маршрутов
+    public static function group(string $prefix, callable $callback): void
+    {
+        self::single()->routeCollector->addGroup($prefix, $callback);
+        Middleware::single()->group($prefix, $callback);
     }
 
-    public function start(): void {
-        $path = explode('?', $_SERVER['REQUEST_URI'])[0]; // Убираем GET-параметры
+    //Конструктор скрыт. Вызывается только один раз
+    private function __construct()
+    {
+        $this->routeCollector = new RouteCollector(new Std(), new MarkBased());
+    }
 
-        // Обрезаем префикс
-        if (self::$prefix) {
-            $path = substr($path, strlen(self::$prefix));
+    public function setPrefix(string $value = ''): self
+    {
+        $this->prefix = $value;
+        return $this;
+    }
+
+    public function redirect(string $url): void
+    {
+        header('Location: ' . $this->getUrl($url));
+    }
+
+    public function getUrl(string $url): string
+    {
+        return $this->prefix . $url;
+    }
+
+    //Добавление middlewares для текущего маршрута
+    public function middleware(...$middlewares): self
+    {
+        Middleware::single()->add($this->currentHttpMethod, $this->currentRoute, $middlewares);
+        return $this;
+    }
+
+    public function start(): void
+    {
+        // Получаем HTTP-метод и URI из глобальных переменных
+        $httpMethod = $_SERVER['REQUEST_METHOD'];
+        $uri = $_SERVER['REQUEST_URI'];
+
+        // Удаляем строку запроса (?foo=bar) и декодируем URI
+        if (false !== $pos = strpos($uri, '?')) {
+            $uri = substr($uri, 0, $pos);
         }
+        $uri = rawurldecode($uri);
+        $uri = substr($uri, strlen($this->prefix));
 
-        // Удаляем начальный и конечный слэши
-        $path = trim($path, '/');
+        // Создаем диспетчер маршрутов
+        $dispatcher = new Dispatcher($this->routeCollector->getData());
 
+        // Определяем маршрут
+        $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
-        // Проверяем, существует ли маршрут
-        if (!array_key_exists($path, self::$routes)) {
-            http_response_code(404);
-            echo "Page not found";
-            return;
+        switch ($routeInfo[0]) {
+            case Dispatcher::NOT_FOUND:
+                throw new Error('NOT_FOUND');
+            case Dispatcher::METHOD_NOT_ALLOWED:
+                throw new Error('METHOD_NOT_ALLOWED');
+            case Dispatcher::FOUND:
+                // Получаем обработчик маршрута и параметры
+                $handler = $routeInfo[1];
+                $vars = array_values($routeInfo[2]);
+
+                // Создаем объект Request
+                $request = new \Src\Request();
+
+                // Получаем имя класса контроллера и метод
+                $controllerClass = $handler[0];
+                $method = $handler[1];
+
+                // Создаем экземпляр контроллера
+                $controller = new $controllerClass();
+
+                // Вызываем метод контроллера с передачей Request
+                call_user_func([$controller, $method], $request);
+
+                break;
         }
-
-        $class = self::$routes[$path][0];
-        $action = self::$routes[$path][1];
-
-        if (!class_exists($class)) {
-            throw new Error('This class does not exist');
-        }
-
-        if (!method_exists($class, $action)) {
-            throw new Error('This method does not exist');
-        }
-
-        call_user_func([new $class, $action]);
     }
 }
