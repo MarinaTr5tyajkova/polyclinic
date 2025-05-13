@@ -10,6 +10,7 @@ class AdminController
 {
     public function employees(Request $request): string
     {
+        // Проверка прав доступа
         if (!Auth::check() || !Auth::user()->isAdmin()) {
             return (new View())->render('errors.403');
         }
@@ -19,7 +20,7 @@ class AdminController
 
         if ($request->method === 'POST') {
             if ($request->has('last_name')) {
-                // Add new employee
+                // Добавление нового сотрудника
                 $data = [
                     'last_name' => $request->get('last_name'),
                     'first_name' => $request->get('first_name'),
@@ -31,14 +32,21 @@ class AdminController
 
                 if ($employeeModel->addEmployee($data)) {
                     $message = 'Сотрудник успешно добавлен';
+                } else {
+                    $message = 'Ошибка при добавлении сотрудника';
                 }
             } elseif ($request->has('delete_id')) {
-                if ($employeeModel->deleteEmployee((int)$request->get('delete_id'))) {
+                // Удаление сотрудника
+                $deleteId = (int)$request->get('delete_id');
+                if ($employeeModel->deleteEmployee($deleteId)) {
                     $message = 'Сотрудник успешно удален';
+                } else {
+                    $message = 'Ошибка при удалении сотрудника';
                 }
             }
         }
 
+        // Получение списка сотрудников
         $employees = $employeeModel->getEmployeesWithUser();
 
         return (new View())->render('site.employees', [

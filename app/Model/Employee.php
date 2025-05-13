@@ -1,5 +1,4 @@
 <?php
-
 namespace Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,13 +11,14 @@ class Employee extends Model
     protected $table = 'employee';
     public $timestamps = false;
 
+    // Указываем правильное имя первичного ключа
+    protected $primaryKey = 'user_id';
+
     // Разрешаем массовое заполнение полей
-    protected $fillable = ['last_name', 'first_name', 'patronym', 'admin_id', 'user_id'];
+    protected $fillable = ['last_name', 'first_name', 'patronym', 'created_by'];
 
     /**
      * Отношение "Сотрудник принадлежит пользователю".
-     *
-
      */
     public function user()
     {
@@ -27,8 +27,6 @@ class Employee extends Model
 
     /**
      * Получить всех сотрудников с данными пользователя.
-     *
-
      */
     public function getEmployeesWithUser()
     {
@@ -57,7 +55,7 @@ class Employee extends Model
             'last_name' => $data['last_name'],
             'first_name' => $data['first_name'],
             'patronym' => $data['patronym'] ?? null,
-            'admin_id' => $data['admin_id'] ?? null,
+            'created_by' => $data['admin_id'] ?? null,
             'user_id' => $user->id,
         ];
 
@@ -72,7 +70,7 @@ class Employee extends Model
      */
     public function deleteEmployee(int $id): bool
     {
-        $employee = $this->find($id); // Находим сотрудника по ID
+        $employee = $this->where('user_id', $id)->first(); // Ищем сотрудника по user_id
         if ($employee) {
             // Удаляем связанного пользователя
             $employee->user()->delete();
@@ -80,9 +78,4 @@ class Employee extends Model
         }
         return false;
     }
-
-//    public function getFullName(): string
-//    {
-//        return trim("{$this->last_name} {$this->first_name} {$this->patronym}");
-//    }
 }
