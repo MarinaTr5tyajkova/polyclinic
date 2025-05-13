@@ -24,10 +24,17 @@ class Application
         // Инициализация базы данных
         $this->dbRun();
 
-        // Создание и инициализация Auth
-        $identityClass = new $this->settings->app['identity'];
-        $this->auth = new $this->settings->app['auth']($identityClass);
+        // Инициализация Auth
+        $identityClass = $this->settings->app['identity'];
+
+        if (!class_exists($identityClass)) {
+            throw new \RuntimeException("Identity class {$identityClass} not found. Check namespace and autoload configuration.");
+        }
+
+        $this->auth = new $this->settings->app['admin'](new $identityClass());
+        Auth::init(new $identityClass());
     }
+
 
     public function __get($key)
     {
@@ -39,7 +46,7 @@ class Application
             case 'auth':
                 return $this->auth;
             default:
-                throw new Error('Accessing a non-existent property');
+                throw new Error('Accessing a non-existent property: ' . $key);
         }
     }
 

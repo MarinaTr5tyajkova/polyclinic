@@ -36,6 +36,10 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
             'Psr\\Container\\' => 14,
             'Psr\\Clock\\' => 10,
         ),
+        'M' => 
+        array (
+            'Model\\' => 6,
+        ),
         'I' => 
         array (
             'Illuminate\\Support\\' => 19,
@@ -56,12 +60,17 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
         ),
         'C' => 
         array (
+            'Controller\\' => 11,
             'Carbon\\Doctrine\\' => 16,
             'Carbon\\' => 7,
         ),
         'B' => 
         array (
             'Brick\\Math\\' => 11,
+        ),
+        'A' => 
+        array (
+            'App\\' => 4,
         ),
     );
 
@@ -102,6 +111,10 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
+        'Model\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/Model',
+        ),
         'Illuminate\\Support\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/support',
@@ -141,6 +154,10 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
         ),
+        'Controller\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/Controller',
+        ),
         'Carbon\\Doctrine\\' => 
         array (
             0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
@@ -153,10 +170,10 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
-    );
-
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/../..' . '/app',
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app',
+        ),
     );
 
     public static $classMap = array (
@@ -173,7 +190,6 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e::$fallbackDirsPsr4;
             $loader->classMap = ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e::$classMap;
 
         }, null, ClassLoader::class);

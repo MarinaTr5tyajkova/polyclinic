@@ -9,8 +9,8 @@ class AuthMiddleware
 {
     public function handle(Request $request)
     {
-        //Если пользователь не авторизован, то редирект на страницу входа
         if (!Auth::check()) {
+            $_SESSION['message'] = 'Необходимо войти в систему';
             app()->route->redirect('/login');
         }
     }

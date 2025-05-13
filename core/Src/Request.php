@@ -2,45 +2,54 @@
 
 namespace Src;
 
-use Error;
-
 class Request
 {
-    protected array $body;
     public string $method;
-    public array $headers;
+    public array $data;
+    public ?array $body = null; // Инициализируем как nullable
 
     public function __construct()
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->data = $this->method === 'GET' ? $_GET : $_POST;
+        $this->data = array_merge($_GET, $_POST);
+
+        // Инициализация body для JSON-запросов
+        $json = file_get_contents('php://input');
+        if ($json !== false) {
+            $this->body = json_decode($json, true) ?? [];
+        }
     }
 
+    /**
+     * Проверяет наличие параметра в запросе.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function has(string $key): bool
+    {
+        return isset($this->data[$key]) || isset($this->body[$key]);
+    }
+
+    /**
+     * Получает значение параметра из запроса.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get(string $key, $default = null)
+    {
+        return $this->data[$key] ?? $this->body[$key] ?? $default;
+    }
+
+    /**
+     * Возвращает все данные запроса (GET + POST + JSON body).
+     *
+     * @return array
+     */
     public function all(): array
     {
-        return $this->data;
-    }
-
-    public function set($field, $value):void
-    {
-        $this->body[$field] = $value;
-    }
-
-    public function get($field)
-    {
-        return $this->body[$field];
-    }
-
-    public function files(): array
-    {
-        return $_FILES;
-    }
-
-    public function __get($key)
-    {
-        if (array_key_exists($key, $this->body)) {
-            return $this->body[$key];
-        }
-        throw new Error('Accessing a non-existent property');
+        return array_merge($this->data, $this->body ?? []);
     }
 }

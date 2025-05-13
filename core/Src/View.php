@@ -51,4 +51,6 @@ class View {
     public function __toString(): string {
         return $this->render($this->view, $this->data);
     }
+
+
 }

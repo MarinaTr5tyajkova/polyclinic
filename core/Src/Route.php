@@ -70,11 +70,12 @@ class Route
         return $this;
     }
 
-    public function start(): void
-    {
-        // Получаем HTTP-метод и URI из глобальных переменных
+    public function start(): void {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $uri = $_SERVER['REQUEST_URI'];
+
+        error_log("Request method: $httpMethod");
+        error_log("Request URI: $uri");
 
         // Удаляем строку запроса (?foo=bar) и декодируем URI
         if (false !== $pos = strpos($uri, '?')) {
@@ -82,6 +83,8 @@ class Route
         }
         $uri = rawurldecode($uri);
         $uri = substr($uri, strlen($this->prefix));
+
+        error_log("Processed URI: $uri");
 
         // Создаем диспетчер маршрутов
         $dispatcher = new Dispatcher($this->routeCollector->getData());
@@ -91,13 +94,17 @@ class Route
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
+                error_log("Route not found for URI: $uri");
                 throw new Error('NOT_FOUND');
             case Dispatcher::METHOD_NOT_ALLOWED:
+                error_log("Method not allowed for URI: $uri");
                 throw new Error('METHOD_NOT_ALLOWED');
             case Dispatcher::FOUND:
                 // Получаем обработчик маршрута и параметры
                 $handler = $routeInfo[1];
                 $vars = array_values($routeInfo[2]);
+
+                error_log("Route found: handler=" . print_r($handler, true));
 
                 // Создаем объект Request
                 $request = new \Src\Request();
