@@ -2,6 +2,7 @@
 /** @var string|null $content */
 // Проверяем, является ли текущий URL страницей входа
 $isLoginPage = str_contains($_SERVER['REQUEST_URI'], '/login');
+$isEmployeePage = str_contains($_SERVER['REQUEST_URI'], '/employee');
 ?>
 
 <!doctype html>
@@ -9,11 +10,11 @@ $isLoginPage = str_contains($_SERVER['REQUEST_URI'], '/login');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/polyclinic/public/assets/css/styles.css">
+    <link rel="stylesheet" href="/polyclinic/public/assets/css/main.css?v=1.0.2">
     <title>Онлайн-регистратура</title>
 </head>
 <body class="<?= $isLoginPage ? 'login-page' : '' ?>">
-<?php if (!$isLoginPage): ?>
+<?php if (!$isLoginPage && !$isEmployeePage): ?>
     <aside class="sidebar">
         <div class="logo">
             <div class="logo-a">Электронная регистратура</div>

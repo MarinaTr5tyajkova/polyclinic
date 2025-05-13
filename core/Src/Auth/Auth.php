@@ -93,21 +93,31 @@ class Auth
 
     public function getUserFullName()
     {
+        // Если пользователь не авторизован
         if (!$this->check()) {
             return 'Гость';
         }
 
         $user = $this->user();
 
-        try {
-            if ($user->role === 'admin') {
-                return $user->name; // Или используйте связанную модель если нужно
-            } else {
-                $employee = \Model\Employee::where('user_id', $user->id)->first();
-                return $employee ? trim("$employee->last_name $employee->first_name $employee->patronym") : 'Сотрудник';
+        // Для админов
+        if ($user->role === 'admin') {
+            $admin = \Model\Admin::where('user_id', $user->id)->first();
+            if ($admin) {
+                $fullName = trim("$admin->last_name $admin->first_name $admin->patronym");
+                return $fullName ?: $user->login;
             }
-        } catch (\Exception $e) {
-            return $user->name ?? 'Пользователь';
+            return $user->login;
         }
+
+        // Для сотрудников
+        $employee = \Model\Employee::where('user_id', $user->id)->first();
+        if ($employee) {
+            $fullName = trim("$employee->last_name $employee->first_name $employee->patronym");
+            return $fullName ?: $user->login;
+        }
+
+        // Если ни админ, ни сотрудник не найдены
+        return $user->login;
     }
 }

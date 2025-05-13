@@ -81,8 +81,8 @@ class Employee extends Model
         return false;
     }
 
-    public function getFullName(): string
-    {
-        return trim("{$this->last_name} {$this->first_name} {$this->patronym}");
-    }
+//    public function getFullName(): string
+//    {
+//        return trim("{$this->last_name} {$this->first_name} {$this->patronym}");
+//    }
 }

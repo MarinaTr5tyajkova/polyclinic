@@ -1,0 +1,136 @@
+/* main.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 320px;
+    background-color: #EDECEC;
+    padding: 20px;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.container {
+    box-sizing: border-box;
+}
+
+.logo {
+    margin-bottom: 30px;
+}
+
+.logo-a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.logo-b {
+    font-size: 14px;
+    color: #666;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.user-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.user-role {
+    font-size: 14px;
+    color: #0DAA7B;
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 30px;
+}
+
+.nav-menu li {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu img {
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #333;
+    padding: 5px 0;
+}
+
+.nav-menu a:hover {
+    color: #23D09C;
+}
+
+.btn-logout {
+    display: inline-block;
+    padding: 14px 35px;
+    background-color: #23D09C;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 30px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-logout:hover {
+    background-color: #0DAA7B;
+}
+
+.message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .container {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 20px;
+    }
+}

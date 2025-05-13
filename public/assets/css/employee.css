@@ -1,0 +1,214 @@
+/* Основные стили */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    color: #333;
+}
+
+.login-logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.login-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.logo-a {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.logo-b {
+    font-size: 14px;
+}
+
+/* Шапка */
+.header {
+    background-color: #EDECEC;
+    padding: 15px 30px;
+    color: white;
+
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Блок администратора */
+.admin-section {
+    background-color: white;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.admin-section h2 {
+    color: #28D19E;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+table {
+    width: 600px;
+    border-collapse: collapse;
+    border: 1px solid #D3D0D0;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+th {
+    background-color: #28D19E;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+}
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Форма добавления */
+.add-form {
+    position: fixed;
+    top: 50%;
+    right: 50px; /* отступ справа */
+    transform: translateY(-50%); /* центрируем по вертикали */
+    width: 420px;
+    padding: 30px 12px;
+    border: 1px solid #D3D0D0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white; /* чтобы не было прозрачности при фиксированном положении */
+    /*box-shadow: 0 2px 8px rgba(0,0,0,0.1); !* лёгкая тень для выделения *!*/
+    z-index: 1000; /* чтобы форма была поверх */
+}
+
+p {
+    color: #12B585;
+}
+.form-group {
+    margin-bottom: 15px;
+    padding: 7px;
+    width: 100%;
+    text-align: center; /* Центрируем label, но не input */
+}
+
+.form-group label {
+    display: block;
+    margin: 5px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-group input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    width: 350px; /* фиксированная ширина */
+    text-align: left; /* Выровнять вводимый текст по левому краю */
+    font-size: 14px;
+    color: #333;
+}
+
+/* Серый цвет для placeholder */
+.form-group input::placeholder {
+    color: #999999;
+    opacity: 1; /* Чтобы в некоторых браузерах цвет был ярким */
+}
+
+/* Кнопка по центру */
+.submit-btn {
+    background-color: #28D19E;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+
+    display: block;      /* Чтобы margin auto сработал */
+    margin: 10px auto 0 auto; /* Центрируем кнопку по горизонтали */
+    width: fit-content;  /* Кнопка по ширине по содержимому */
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #22b07a;
+}
+
+
+
+/* Панель пользователя */
+.user-panel {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.user-info {
+    margin-right: 15px;
+    text-align: right;
+}
+
+.user-name {
+    font-weight: bold;
+    color: black;
+    text-decoration: underline;
+    margin-left: 10px;
+}
+
+.btn-logout {
+    padding: 14px 35px;
+    background-color: #23D09C;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 100px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Разделительная линия */
+.divider {
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+/* Контейнер для таблицы и формы */
+.content-wrapper {
+    display: flex;
+    margin: 20px;
+    gap: 40px; /* Отступ между таблицей и формой */
+    margin-left: 20px;
+    margin-top: 100px; /* небольшой отступ сверху */
+
+}
+
+/* Таблица слева */
+.employees-table {
+    flex: 1 1 auto; /* Занимает доступное пространство */
+    max-width: 900px; /* Максимальная ширина таблицы */
+    margin: 0; /* Убираем margin, чтобы не сдвигалась */
+}
+
+
