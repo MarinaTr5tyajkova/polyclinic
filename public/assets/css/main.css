@@ -1,10 +1,17 @@
-/* main.css */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: #FFFFFF;
     min-height: 100vh;
+    height: 100vh;
+    overflow: hidden; /* Чтобы body не скроллился */
+}
+
+.layout-wrapper {
+    display: flex;
+    height: 100vh; /* Высота экрана */
+    overflow: hidden;
 }
 
 .sidebar {
@@ -20,7 +27,12 @@ body {
 }
 
 .container {
+    flex: 1; /* Занимает всё оставшееся пространство */
     box-sizing: border-box;
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto; /* Скролл контента */
+    background-color: #fff;
 }
 
 .logo {
@@ -133,4 +145,133 @@ body {
         max-width: 100%;
         padding: 20px;
     }
+}
+
+
+table {
+    width: 1200px;
+    border-collapse: collapse;
+    border: 1px solid #D3D0D0;
+    margin-top: 20px;
+}
+th {
+    background-color: #28D19E;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+}
+tr:hover {
+    background-color: #f8f9fa;
+}
+.status-confirmed {
+    color: #27ae60;
+    font-weight: bold;
+}
+.status-canceled {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.search-group {
+    margin-bottom: 15px;
+}
+
+table {
+    width: 600px;
+    border-collapse: collapse;
+    border: 1px solid #D3D0D0;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+th {
+    background-color: #28D19E;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+}
+tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Форма добавления */
+.add-form {
+    position: fixed;
+    top: 400px;
+    right: 100px; /* отступ справа */
+    transform: translateY(-50%); /* центрируем по вертикали */
+    width: 420px;
+    padding: 30px 12px;
+    border: 1px solid #D3D0D0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white; /* чтобы не было прозрачности при фиксированном положении */
+    /*box-shadow: 0 2px 8px rgba(0,0,0,0.1); !* лёгкая тень для выделения *!*/
+    z-index: 1000; /* чтобы форма была поверх */
+}
+
+p {
+    color: #12B585;
+}
+.form-group {
+    margin-bottom: 15px;
+    padding: 7px;
+    text-align: center; /* Центрируем label, но не input */
+}
+
+.form-group label {
+    display: block;
+    margin: 5px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-group input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    width: 350px; /* фиксированная ширина */
+    text-align: left; /* Выровнять вводимый текст по левому краю */
+    font-size: 14px;
+    color: #333;
+}
+
+.btn-submit {
+    background-color: #28D19E;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+
+    display: block;      /* Чтобы margin auto сработал */
+    margin: 10px auto 0 auto; /* Центрируем кнопку по горизонтали */
+    width: fit-content;  /* Кнопка по ширине по содержимому */
+    transition: background-color 0.3s ease;
+}
+
+.btn_submit{
+    background-color: #28D19E;
+    color: white;
+    height: 40px;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.search-groupe {
+    display: flex; /* Используем флексбокс для выравнивания */
+    align-items: baseline; /* Выравниваем элементы по вертикали */
+
 }
