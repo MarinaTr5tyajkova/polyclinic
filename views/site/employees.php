@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <title>Управление сотрудниками</title>
     <link rel="stylesheet" href="/polyclinic/public/assets/css/employee.css?v=1.0.5">
+    <style>
+        .message-box {
+            padding: 10px;
+            margin: 10px 0;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            text-align: center;
+            display: <?= isset($message) ? 'block' : 'none' ?>;
+        }
+    </style>
 </head>
 <body>
 <!-- Шапка -->
@@ -22,7 +32,6 @@
         <div class="user-name">
             <?= app()->auth->getUserFullName() ?>
         </div>
-
         <?php if (app()->auth::check()): ?>
             <a href="/polyclinic/logout" class="btn-logout">Выйти</a>
         <?php else: ?>
@@ -30,38 +39,37 @@
         <?php endif; ?>
     </div>
 </header>
-<!-- Основной контент -->
 <div class="main-content">
     <div class="content-wrapper">
-        <!-- Таблица сотрудников -->
+        <?php if (isset($message)): ?>
+            <div class="message-box">
+                <?= htmlspecialchars($message) ?>
+            </div>
+        <?php endif; ?>
         <div class="employees-table">
-            <?php if ($message): ?>
-                <div id="message" class="message" style="display: none;">
-                    <span id="message-text"></span>
-                    <span id="close-message" class="close-btn">×</span> <!-- Крестик для закрытия -->
-                </div>
-            <?php endif; ?>
             <table>
                 <thead>
                 <tr>
                     <th>ID</th>
                     <th>ФИО</th>
                     <th>Логин</th>
-                    <th></th>
+                    <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php foreach ($employees as $employee): ?>
                     <tr>
-                        <td><?= htmlspecialchars($employee->user_id) ?> </td>
-                        <td><?= htmlspecialchars($employee->last_name) ?>
+                        <td><?= htmlspecialchars($employee->user_id) ?></td>
+                        <td>
+                            <?= htmlspecialchars($employee->last_name) ?>
                             <?= htmlspecialchars($employee->first_name) ?>
-                            <?= htmlspecialchars($employee->patronym ?? '') ?></td>
+                            <?= htmlspecialchars($employee->patronym ?? '') ?>
+                        </td>
                         <td><?= htmlspecialchars($employee->user->login) ?></td>
                         <td>
-                            <form method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить сотрудника?');">
-                                <input type="hidden" name="delete_id" value="<?= $employee->user_id ?>"> <!-- Передаем user_id -->
-                                <img src="/polyclinic/public/assets/images/trashcan.svg" alt="Удалить" onclick="this.closest('form').submit()">
+                            <form method="POST">
+                                <input type="hidden" name="delete_id" value="<?= $employee->user_id ?>">
+                                <button type="submit" class="btn-delete">Удалить</button>
                             </form>
                         </td>
                     </tr>
@@ -69,10 +77,9 @@
                 </tbody>
             </table>
         </div>
-        <!-- Форма добавления -->
         <div class="add-form">
-            <p>Добавить нового сотрудника</p>
-            <form method="POST" action="/admin/employees" class="form-group-all">
+            <h3>Добавить нового сотрудника</h3>
+            <form method="POST">
                 <div class="form-group">
                     <input type="text" name="last_name" placeholder="Фамилия" required>
                 </div>
@@ -88,7 +95,7 @@
                 <div class="form-group">
                     <input type="password" name="password" placeholder="Пароль" required>
                 </div>
-                <button type="submit" class="submit-btn">Добавить сотрудника</button>
+                <button type="submit" class="btn-submit">Добавить</button>
             </form>
         </div>
     </div>

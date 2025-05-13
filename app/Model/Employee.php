@@ -3,6 +3,7 @@ namespace Model;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Src\Auth\Auth;
 
 class Employee extends Model
 {
@@ -10,71 +11,65 @@ class Employee extends Model
 
     protected $table = 'employee';
     public $timestamps = false;
-
-    // Указываем правильное имя первичного ключа
     protected $primaryKey = 'user_id';
-
-    // Разрешаем массовое заполнение полей
     protected $fillable = ['last_name', 'first_name', 'patronym', 'created_by'];
 
-    /**
-     * Отношение "Сотрудник принадлежит пользователю".
-     */
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Получить всех сотрудников с данными пользователя.
-     */
-    public function getEmployeesWithUser()
+    public static function addEmployee($request)
     {
-        return $this->with('user')->get();
+        if ($request->method === 'POST') {
+            try {
+                // Проверяем, существует ли пользователь с таким логином
+                $existingUser = User::where('login', $request->get('login'))->first();
+                if ($existingUser) {
+                    throw new \Exception("Логин уже занят");
+                }
+
+                // Создаем пользователя
+                $user = User::create([
+                    'login' => $request->get('login'),
+                    'password' => password_hash($request->get('password'), PASSWORD_DEFAULT),
+                    'role' => 'employee'
+                ]);
+
+                // Проверяем, что пользователь создан
+                if (!$user) {
+                    throw new \Exception("Ошибка при создании пользователя");
+                }
+
+                // Создаем сотрудника
+                $employee = self::create([
+                    'last_name' => $request->get('last_name'),
+                    'first_name' => $request->get('first_name'),
+                    'patronym' => $request->get('patronym'),
+                    'created_by' => Auth::user()->id,
+                    'user_id' => $user->id
+                ]);
+
+                return $employee;
+            } catch (\Exception $e) {
+                error_log($e->getMessage());
+                return null;
+            }
+        }
+        return null;
     }
 
-    /**
-     * Добавить нового сотрудника.
-     *
-     * @param array $data
-     * @return \Model\Employee
-     */
-    public function addEmployee(array $data)
+    public static function getEmployeesWithUser()
     {
-        // Создаем пользователя в таблице users
-        $userData = [
-            'login' => $data['login'],
-            'password' => md5($data['password']), // Хэшируем пароль через MD5
-            'role' => 'employee',
-        ];
-
-        $user = (new User())->create($userData);
-
-        // Создаем сотрудника в таблице employee
-        $employeeData = [
-            'last_name' => $data['last_name'],
-            'first_name' => $data['first_name'],
-            'patronym' => $data['patronym'] ?? null,
-            'created_by' => $data['admin_id'] ?? null,
-            'user_id' => $user->id,
-        ];
-
-        return $this->create($employeeData);
+        return self::with('user')->get();
     }
 
-    /**
-     * Удалить сотрудника по ID.
-     *
-     * @param int $id
-     * @return bool
-     */
-    public function deleteEmployee(int $id): bool
+    public static function deleteEmployee($id)
     {
-        $employee = $this->where('user_id', $id)->first(); // Ищем сотрудника по user_id
+        $employee = self::find($id);
         if ($employee) {
-            // Удаляем связанного пользователя
             $employee->user()->delete();
-            return $employee->delete(); // Удаляем сотрудника
+            return $employee->delete();
         }
         return false;
     }
