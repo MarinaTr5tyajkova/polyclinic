@@ -89,7 +89,7 @@ tr:hover {
 .add-form {
     position: fixed;
     top: 50%;
-    right: 50px; /* отступ справа */
+    right: 200px; /* отступ справа */
     transform: translateY(-50%); /* центрируем по вертикали */
     width: 420px;
     padding: 30px 12px;
@@ -137,7 +137,7 @@ p {
 }
 
 /* Кнопка по центру */
-.submit-btn {
+.btn-submit {
     background-color: #28D19E;
     color: white;
     border: none;

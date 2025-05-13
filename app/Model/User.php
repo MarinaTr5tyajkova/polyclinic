@@ -13,8 +13,15 @@ class User extends Model implements IdentityInterface
     protected static function booted()
     {
         static::creating(function ($user) {
-            // Хешируем пароль при создании
+            // Хешируем пароль при создании пользователя
             $user->password = self::hashPassword($user->password);
+        });
+
+        static::updating(function ($user) {
+            // Хешируем пароль при обновлении, если он изменён
+            if ($user->isDirty('password')) {
+                $user->password = self::hashPassword($user->password);
+            }
         });
     }
 
@@ -36,17 +43,25 @@ class User extends Model implements IdentityInterface
     public function attemptIdentity(array $credentials): ?IdentityInterface
     {
         if (empty($credentials['login']) || empty($credentials['password'])) {
+            error_log('Empty login or password');
             return null;
         }
 
-        // Ищем пользователя по логину
         $user = self::where('login', $credentials['login'])->first();
 
-        // Проверяем, совпадает ли MD5-хэш пароля
-        if ($user && $user->password === md5($credentials['password'])) {
+        if (!$user) {
+            error_log('User not found: ' . $credentials['login']);
+            return null;
+        }
+
+        $hashedInputPassword = self::hashPassword($credentials['password']);
+        error_log("Login: {$credentials['login']}, Input hash: {$hashedInputPassword}, DB hash: {$user->password}");
+
+        if ($user->password === $hashedInputPassword) {
             return $user;
         }
 
+        error_log('Password mismatch for user: ' . $credentials['login']);
         return null;
     }
 

@@ -13,13 +13,12 @@ class UserController
         if ($request->method === 'GET') {
             $message = $_SESSION['message'] ?? null;
             unset($_SESSION['message']);
-            return new View('site.login', ['message' => $message]); // Используем шаблон admin.login
+            return new View('site.login', ['message' => $message]);
         }
 
         if (Auth::attempt($request->all())) {
             $user = Auth::user();
 
-            // Редирект в зависимости от роли
             if ($user->isAdmin()) {
                 app()->route->redirect('/admin/employees');
             } elseif ($user->isEmployee()) {

@@ -41,11 +41,6 @@
 </header>
 <div class="main-content">
     <div class="content-wrapper">
-        <?php if (isset($message)): ?>
-            <div class="message-box">
-                <?= htmlspecialchars($message) ?>
-            </div>
-        <?php endif; ?>
         <div class="employees-table">
             <table>
                 <thead>
@@ -53,7 +48,7 @@
                     <th>ID</th>
                     <th>ФИО</th>
                     <th>Логин</th>
-                    <th>Действия</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -68,8 +63,8 @@
                         <td><?= htmlspecialchars($employee->user->login) ?></td>
                         <td>
                             <form method="POST">
-                                <input type="hidden" name="delete_id" value="<?= $employee->user_id ?>">
-                                <button type="submit" class="btn-delete">Удалить</button>
+                                <input type="hidden" name="delete_id" value="<?= $employee->user_id ?>"> <!-- Передаем user_id -->
+                                <img src="/polyclinic/public/assets/images/trashcan.svg" alt="Удалить" onclick="this.closest('form').submit()">
                             </form>
                         </td>
                     </tr>
