@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Управление сотрудниками</title>
-    <link rel="stylesheet" href="/polyclinic/public/assets/css/employee.css?v=1.0.5">
+    <link rel="stylesheet" href="/polyclinic/public/assets/css/employee.css?v=1.0.7">
     <style>
         .message-box {
             padding: 10px;

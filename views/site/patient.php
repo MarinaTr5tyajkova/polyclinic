@@ -2,7 +2,7 @@
     <div class="content-wrapper">
         <!-- Поисковая строка -->
         <div class="search-group">
-            <form method="GET" action="/polyclinic/patient/search" class="search-group" style="display: flex; align-items: center">
+            <form method="GET" action="/polyclinic/patient/search" class="search-groupe" style="display: flex; align-items: center">
                 <div class="form-group" style="width: 350px; margin: 0">
                     <input type="text" name="search_query" placeholder="Введите ФИО пациента" required>
                 </div>
@@ -12,7 +12,7 @@
 
         <!-- Таблица пациентов -->
         <div class="patients-table">
-            <table>
+            <table class="table_patient">
                 <thead>
                 <tr>
                     <th>ФИО</th>

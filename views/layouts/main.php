@@ -9,7 +9,7 @@ $isEmployeePage = str_contains($_SERVER['REQUEST_URI'], '/employee');
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Онлайн-регистратура</title>
-    <link rel="stylesheet" href="/polyclinic/public/assets/css/main.css?v=1.0.7" />
+    <link rel="stylesheet" href="/polyclinic/public/assets/css/main.css?v=1.8.11" />
 </head>
 <body class="<?= $isLoginPage ? 'login-page' : '' ?>">
 <?php if (!$isLoginPage && !$isEmployeePage): ?>
@@ -59,7 +59,7 @@ $isEmployeePage = str_contains($_SERVER['REQUEST_URI'], '/employee');
         </div>
     </div>
 <?php else: ?>
-    <div class="container">
+    <div class="containers">
         <?= $content ?? ''; ?>
     </div>
 <?php endif; ?>

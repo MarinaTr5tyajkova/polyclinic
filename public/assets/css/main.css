@@ -185,8 +185,22 @@ table {
     border-collapse: collapse;
     border: 1px solid #D3D0D0;
     margin-top: 20px;
-
 }
+
+.table_record {
+    width: 1100px;
+    border-collapse: collapse;
+    border: 1px solid #D3D0D0;
+    margin-top: 20px;
+}
+
+.table_patient {
+    width: 600px;
+    border-collapse: collapse;
+    border: 1px solid #D3D0D0;
+    margin-top: 20px;
+}
+
 th {
     background-color: #28D19E;
     color: white;
@@ -274,10 +288,148 @@ p {
     font-weight: bold;
     transition: background-color 0.3s ease;
 }
+.search-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Сдвигаем содержимое к левому краю */
+    gap: 20px; /* Добавим промежутки между элементами */
+    margin-bottom: 20px;
+}
 
-.search-groupe {
-    display: flex; /* Используем флексбокс для выравнивания */
-    align-items: baseline; /* Выравниваем элементы по вертикали */
+.search-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-with-button {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.search-group input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    width: 350px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
 
 }
 
+.search-group button {
+    background-color: #28D19E;
+    color: white;
+    height: 40px;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-add-record {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    height: 40px;
+    line-height: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-add-record:hover {
+    background-color: #218838;
+}
+
+.search-group button:hover {
+    background-color: #22b883;
+}
+
+.btn-add-recordes {
+    background-color: #28D19E;
+    cplor: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    margin: 10px auto 0 auto;
+    width: fit-content;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+
+/* Общие стили формы */
+.record-formw {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Сообщение об ошибке */
+.record-formw p {
+    color: #d93025;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Стили для label */
+.record-formw label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 15px;
+}
+
+/* Стили для select и input */
+.record-formw select,
+.record-formw input[type="date"],
+.record-formw input[type="time"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.record-formw select:focus,
+.record-formw input[type="date"]:focus,
+.record-formw input[type="time"]:focus {
+    border-color: #28d19e;
+    outline: none;
+}
+
+/* Стили для кнопки */
+.record-formw button[type="submit"] {
+    margin-top: 25px;
+    width: 100%;
+    padding: 12px;
+    background-color: #28d19e;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.record-formw button[type="submit"]:hover {
+    background-color: #22b883;
+}

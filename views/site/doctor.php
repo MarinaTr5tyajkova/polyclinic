@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="search-group">
-    <form method="GET" action="/polyclinic/doctor/search" class="search-group" style="display: flex; align-items: center">
+    <form method="GET" action="/polyclinic/doctor/search" class="search-groupe" style="display: flex; align-items: center">
         <div class="form-group" style="width: 350px; margin: 0">
             <input type="text" name="search_query" placeholder="Введите ФИО или специализацию врача" value="<?= htmlspecialchars($search_query ?? '') ?>" required />
         </div>
@@ -37,8 +37,8 @@
             <td>
                 <form method="POST" style="display:inline;">
                     <input type="hidden" name="delete_id" value="<?= $doctor->id?>">
-                    <button type="submit" class="btn-delete" title="Удалить врача">
-                        <img src="/polyclinic/public/assets/images/trashcan.svg" alt="Удалить" />
+                    <button type="submit" style="background:none; border:none; cursor:pointer;" title="Удалитьврача">
+                        <img src="/polyclinic/public/assets/images/trashcan.svg" alt="Удалить" style="width:20px; height:20px;">
                     </button>
                 </form>
             </td>
