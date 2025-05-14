@@ -109,7 +109,7 @@ p {
 .form-group {
     margin-bottom: 15px;
     padding: 7px;
-    width: 100%;
+    width: 500px;
     text-align: center; /* Центрируем label, но не input */
 }
 

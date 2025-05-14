@@ -9,7 +9,7 @@ $isEmployeePage = str_contains($_SERVER['REQUEST_URI'], '/employee');
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Онлайн-регистратура</title>
-    <link rel="stylesheet" href="/polyclinic/public/assets/css/main.css?v=1.0.6" />
+    <link rel="stylesheet" href="/polyclinic/public/assets/css/main.css?v=1.0.7" />
 </head>
 <body class="<?= $isLoginPage ? 'login-page' : '' ?>">
 <?php if (!$isLoginPage && !$isEmployeePage): ?>
@@ -39,7 +39,7 @@ $isEmployeePage = str_contains($_SERVER['REQUEST_URI'], '/employee');
                     <?php elseif (app()->auth->user()->isEmployee()): ?>
                         <li><img src="/polyclinic/public/assets/images/patient.svg" alt="Пациенты" />
                             <a href="/polyclinic/patient">Пациенты</a></li>
-                        <li><img src="/polyclinic/public/assets/images/doctor.svg" alt="Врачи" style="margin-left: 3px" />
+                        <li><img src="/polyclinic/public/assets/images/doctor.svg" alt="Врачи" style="margin-left: -3px" />
                             <a href="/polyclinic/doctor">Врачи</a></li>
                         <li><img src="/polyclinic/public/assets/images/record.svg" alt="Записи" />
                             <a href="/polyclinic/record">Записи</a></li>

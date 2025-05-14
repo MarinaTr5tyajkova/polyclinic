@@ -13,10 +13,14 @@ Route::add(['GET', 'POST'], '/admin/employees', [Controller\AdminController::cla
 // Маршруты для сотрудников
 Route::add(['GET', 'POST'], '/patient', [Controller\PatientController::class, 'patient'])
     ->middleware('employee'); // Пациенты (только для сотрудников)
-Route::add('GET', '/doctor', [Controller\DoctorController::class, 'doctor'])
-    ->middleware('employee'); // Врачи (только для сотрудников)
 Route::add('GET', '/record', [Controller\RecordController::class, 'record'])
     ->middleware('employee'); // Записи (только для сотрудников)
 // Поиск пациентов (GET)
 Route::add('GET', '/patient/search', [Controller\PatientController::class, 'search'])
     ->middleware('employee');
+
+Route::add(['GET', 'POST'], '/doctor', [Controller\DoctorController::class, 'doctor'])
+    ->middleware('employee'); // Страница врачей с добавлением и удалением
+
+Route::add('GET', '/doctor/search', [Controller\DoctorController::class, 'search'])
+    ->middleware('employee'); // Поиск врачей

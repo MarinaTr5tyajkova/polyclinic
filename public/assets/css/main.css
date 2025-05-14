@@ -181,11 +181,11 @@ tr:hover {
 }
 
 table {
-    width: 600px;
+    width: 730px;
     border-collapse: collapse;
     border: 1px solid #D3D0D0;
     margin-top: 20px;
-    margin-left: 30px;
+
 }
 th {
     background-color: #28D19E;
@@ -205,7 +205,7 @@ tr:hover {
 .add-form {
     position: fixed;
     top: 400px;
-    right: 100px; /* отступ справа */
+    right: 50px; /* отступ справа */
     transform: translateY(-50%); /* центрируем по вертикали */
     width: 420px;
     padding: 30px 12px;
@@ -226,6 +226,11 @@ p {
     margin-bottom: 15px;
     padding: 7px;
     text-align: center; /* Центрируем label, но не input */
+    /*width: 500px;*/
+}
+
+.search-group{
+    display: flex; !important;
 }
 
 .form-group label {
@@ -259,7 +264,7 @@ p {
     transition: background-color 0.3s ease;
 }
 
-.btn_submit{
+.btn_submit {
     background-color: #28D19E;
     color: white;
     height: 40px;
@@ -275,3 +280,4 @@ p {
     align-items: baseline; /* Выравниваем элементы по вертикали */
 
 }
+

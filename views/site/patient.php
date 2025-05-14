@@ -2,8 +2,8 @@
     <div class="content-wrapper">
         <!-- Поисковая строка -->
         <div class="search-group">
-            <form method="GET" action="/polyclinic/patient/search" class="search-group">
-                <div class="form-group">
+            <form method="GET" action="/polyclinic/patient/search" class="search-group" style="display: flex; align-items: center">
+                <div class="form-group" style="width: 350px; margin: 0">
                     <input type="text" name="search_query" placeholder="Введите ФИО пациента" required>
                 </div>
                 <button type="submit" class="btn_submit">Найти</button>
