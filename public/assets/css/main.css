@@ -35,6 +35,14 @@ body {
     background-color: #fff;
 }
 
+.containers {
+    flex: 1; /* Занимает всё оставшееся пространство */
+    box-sizing: border-box;
+    height: 100vh;
+    overflow-y: auto; /* Скролл контента */
+    background-color: #fff;
+}
+
 .logo {
     margin-bottom: 30px;
 }

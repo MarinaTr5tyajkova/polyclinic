@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0aac0579b9bfa5335358dec6a29baeb8",
+    "content-hash": "fb2c11bf71714aee2cc7884a6c69781a",
     "packages": [
         {
             "name": "brick/math",
@@ -1583,7 +1583,8 @@
     "stability-flags": {
         "illuminate/database": 20,
         "illuminate/events": 20,
-        "nikic/fast-route": 20
+        "nikic/fast-route": 20,
+        "symfony/polyfill-mbstring": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

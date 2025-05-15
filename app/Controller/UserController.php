@@ -13,7 +13,8 @@ class UserController
         if ($request->method === 'GET') {
             $message = $_SESSION['message'] ?? null;
             unset($_SESSION['message']);
-            return new View('site.login', ['message' => $message]);
+            // FIX: Convert View to string
+            return (string) new View('site.login', ['message' => $message]);
         }
 
         if (Auth::attempt($request->all())) {
@@ -26,8 +27,10 @@ class UserController
             }
         }
 
-        return new View('site.login', ['message' => 'Неверные учетные данные']);
+        // FIX: Convert View to string
+        return (string) new View('site.login', ['message' => 'Неверные учетные данные']);
     }
+
 
     public function logout(): void
     {

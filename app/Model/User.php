@@ -1,5 +1,4 @@
 <?php
-
 namespace Model;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,12 +12,10 @@ class User extends Model implements IdentityInterface
     protected static function booted()
     {
         static::creating(function ($user) {
-            // Хешируем пароль при создании пользователя
             $user->password = self::hashPassword($user->password);
         });
 
         static::updating(function ($user) {
-            // Хешируем пароль при обновлении, если он изменён
             if ($user->isDirty('password')) {
                 $user->password = self::hashPassword($user->password);
             }
@@ -78,5 +75,12 @@ class User extends Model implements IdentityInterface
     public function roleName(): string
     {
         return $this->role ? ucfirst($this->role) : 'Unknown';
+    }
+
+    // Добавьте этот метод для связи с моделью Employee
+    public function employee()
+    {
+        // Предполагается, что таблица employees имеет поле user_id, ссылающееся на users.id
+        return $this->hasOne(Employee::class, 'user_id', 'id');
     }
 }
