@@ -70,6 +70,7 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
         ),
         'A' => 
         array (
+            'App\\Validators\\' => 15,
             'App\\' => 4,
         ),
     );
@@ -169,6 +170,10 @@ class ComposerStaticInitaefde7915e8999fdfaa25c15ee3df44e
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
+        'App\\Validators\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/Validators',
         ),
         'App\\' => 
         array (

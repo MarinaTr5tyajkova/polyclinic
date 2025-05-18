@@ -10,21 +10,34 @@ class PatientController
 {
     public function patient(Request $request): string
     {
-        // Обработка POST-запросов для добавления или удаления
+        $message = null;
+        $errors = null;
+        $form_data = [];
+
         if ($request->method === 'POST') {
             if ($request->has('delete_id')) {
                 Patient::deletePatient($request->get('delete_id'));
+                $message = 'Пациент удалён';
             } elseif ($request->has('last_name') && $request->has('first_name') && $request->has('birthday')) {
-                Patient::addPatient($request->all());
+                $form_data = $request->all();
+                $result = Patient::addPatientWithValidation($form_data);
+
+                if ($result['success']) {
+                    $message = 'Пациент успешно добавлен';
+                    $form_data = []; // очистить форму после успешного добавления
+                } else {
+                    $errors = $result['errors'];
+                }
             }
         }
 
-        // Получаем список пациентов
         $patients = Patient::all();
 
-        // Рендерим страницу с пациентами
         return (new View())->render('site.patient', [
             'patients' => $patients,
+            'message' => $message,
+            'errors' => $errors,
+            'form_data' => $form_data,
         ]);
     }
 

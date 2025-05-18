@@ -12,15 +12,21 @@ class User extends Model implements IdentityInterface
     protected static function booted()
     {
         static::creating(function ($user) {
-            $user->password = self::hashPassword($user->password);
+            // Хешируем пароль только если он не является MD5 (32 символа, hex)
+            if (strlen($user->password) !== 32 || !ctype_xdigit($user->password)) {
+                $user->password = self::hashPassword($user->password);
+            }
         });
 
         static::updating(function ($user) {
             if ($user->isDirty('password')) {
-                $user->password = self::hashPassword($user->password);
+                if (strlen($user->password) !== 32 || !ctype_xdigit($user->password)) {
+                    $user->password = self::hashPassword($user->password);
+                }
             }
         });
     }
+
 
     public static function hashPassword($password): string
     {

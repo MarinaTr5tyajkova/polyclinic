@@ -47,20 +47,44 @@
         <div class="add-form">
             <h3>Добавить нового пациента</h3>
             <form method="POST" action="/polyclinic/patient">
-                <div class="form-group">
-                    <input type="text" name="last_name" placeholder="Фамилия" required>
+                <div class="form-group <?= !empty($errors['last_name']) ? 'has-error' : '' ?>">
+                    <input type="text" name="last_name" placeholder="Фамилия"
+                           value="<?= htmlspecialchars($form_data['last_name'] ?? '') ?>" required>
+                    <?php if (!empty($errors['last_name'])): ?>
+                        <?php foreach ($errors['last_name'] as $error): ?>
+                            <div class="error-message"><?= htmlspecialchars($error) ?></div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-                <div class="form-group">
-                    <input type="text" name="first_name" placeholder="Имя" required>
+
+                <div class="form-group <?= !empty($errors['first_name']) ? 'has-error' : '' ?>">
+                    <input type="text" name="first_name" placeholder="Имя"
+                           value="<?= htmlspecialchars($form_data['first_name'] ?? '') ?>" required>
+                    <?php if (!empty($errors['first_name'])): ?>
+                        <?php foreach ($errors['first_name'] as $error): ?>
+                            <div class="error-message"><?= htmlspecialchars($error) ?></div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
+
                 <div class="form-group">
-                    <input type="text" name="patronym" placeholder="Отчество">
+                    <input type="text" name="patronym" placeholder="Отчество"
+                           value="<?= htmlspecialchars($form_data['patronym'] ?? '') ?>">
                 </div>
-                <div class="form-group">
-                    <input type="date" name="birthday" placeholder="Дата рождения" required>
+
+                <div class="form-group <?= !empty($errors['birthday']) ? 'has-error' : '' ?>">
+                    <input type="date" name="birthday" placeholder="Дата рождения"
+                           value="<?= htmlspecialchars($form_data['birthday'] ?? '') ?>" required>
+                    <?php if (!empty($errors['birthday'])): ?>
+                        <?php foreach ($errors['birthday'] as $error): ?>
+                            <div class="error-message"><?= htmlspecialchars($error) ?></div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
+
                 <button type="submit" class="btn-submit">Добавить</button>
             </form>
         </div>
-    </div>
-</div>
+
+
+

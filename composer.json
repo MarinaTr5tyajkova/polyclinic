@@ -22,7 +22,8 @@
             "Src\\": "core/Src/",
             "Model\\": "app/Model/",
             "Controller\\": "app/Controller/",
-            "App\\": "app/"
+            "App\\": "app/",
+            "App\\Validators\\": "app/Validators/"
         }
     }
 }

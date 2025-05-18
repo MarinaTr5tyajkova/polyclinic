@@ -5,23 +5,10 @@
     <title>Управление сотрудниками</title>
     <link rel="stylesheet" href="/polyclinic/public/assets/css/employee.css?v=1.0.7">
     <style>
-        .message-box {
-            padding: 10px;
-            margin: 10px 0;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        .errors {
-            background-color: #ffe6e6;
-            border: 1px solid #ff0000;
-            padding: 10px;
-            margin-bottom: 15px;
-            color: #a70000;
-            list-style-type: disc;
-        }
-        .errors li {
-            margin-left: 20px;
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
         }
     </style>
 </head>
@@ -92,38 +79,25 @@
         <div class="add-form">
             <h3>Добавить нового сотрудника</h3>
 
-            <!-- Вывод ошибок валидации с указанием полей -->
-            <?php if (!empty($errors) && is_array($errors)): ?>
-                <ul class="errors">
-                    <?php foreach ($errors as $field => $fieldErrors): ?>
-                        <?php foreach ($fieldErrors as $error): ?>
-                            <li><strong><?= htmlspecialchars($fieldNames[$field] ?? $field) ?>:</strong> <?= htmlspecialchars($error) ?></li>
-                        <?php endforeach; ?>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-
-            <!-- Вывод общего сообщения -->
-            <?php if (!empty($message) && empty($errors)): ?>
-                <div class="message-box"><?= $message ?></div>
-            <?php endif; ?>
-
-            <form method="POST" enctype="multipart/form-data" novalidate>
+            <form method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" name="last_name" placeholder="Фамилия" required value="<?= htmlspecialchars($_POST['last_name'] ?? '') ?>">
+                    <input type="text" name="last_name" placeholder="Фамилия"
+                           value="<?= htmlspecialchars($form_data['last_name'] ?? '') ?>">
                 </div>
                 <div class="form-group">
-                    <input type="text" name="first_name" placeholder="Имя" required value="<?= htmlspecialchars($_POST['first_name'] ?? '') ?>">
+                    <input type="text" name="first_name" placeholder="Имя"
+                           value="<?= htmlspecialchars($form_data['first_name'] ?? '') ?>">
                 </div>
                 <div class="form-group">
-                    <input type="text" name="patronym" placeholder="Отчество" value="<?= htmlspecialchars($_POST['patronym'] ?? '') ?>">
+                    <input type="text" name="patronym" placeholder="Отчество"
+                           value="<?= htmlspecialchars($form_data['patronym'] ?? '') ?>">
                 </div>
                 <div class="form-group">
-                    <input type="text" name="login" placeholder="Логин" required
-                           value="<?= htmlspecialchars($_POST['login'] ?? '') ?>">
+                    <input type="text" name="login" placeholder="Логин"
+                           value="<?= htmlspecialchars($form_data['login'] ?? '') ?>">
                 </div>
                 <div class="form-group">
-                    <input type="password" name="password" placeholder="Пароль" required>
+                    <input type="password" name="password" placeholder="Пароль">
                 </div>
                 <div class="form-group">
                     <label>Аватар (необязательно)</label>
@@ -134,5 +108,50 @@
         </div>
     </div>
 </div>
+
+<?php if (!empty($message)): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const errors = <?= $message ?>;
+            const fieldMap = {
+                'last_name': 'Фамилия',
+                'first_name': 'Имя',
+                'login': 'Логин',
+                'password': 'Пароль'
+            };
+
+            // Удаляем старые сообщения об ошибках
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+
+            if (errors) {
+                Object.entries(errors).forEach(([field, messages]) => {
+                    const input = document.querySelector(`[name="${field}"]`);
+                    if (input) {
+                        const container = input.closest('.form-group');
+                        messages.forEach(msg => {
+                            const errorEl = document.createElement('div');
+                            errorEl.className = 'error-message';
+                            errorEl.textContent = msg.replace(':field', fieldMap[field] || field);
+                            container.appendChild(errorEl);
+                        });
+                    } else if (field === 'database') {
+                        // Общие ошибки, не привязанные к полям
+                        const form = document.querySelector('.add-form');
+                        messages.forEach(msg => {
+                            const errorEl = document.createElement('div');
+                            errorEl.className = 'error-message';
+                            errorEl.textContent = msg;
+                            form.prepend(errorEl);
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+<?php endif; ?>
+
+
+
+
 </body>
 </html>

@@ -5,6 +5,8 @@ namespace Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Src\Auth\Auth;
+use Model\User;
+use Src\Validator\Validator;
 
 class Employee extends Model
 {
@@ -14,7 +16,6 @@ class Employee extends Model
     public $timestamps = false;
     protected $primaryKey = 'user_id';
 
-    // Добавляем avatar в fillable, чтобы можно было массово присваивать
     protected $fillable = [
         'last_name',
         'first_name',
@@ -24,59 +25,84 @@ class Employee extends Model
         'avatar',
     ];
 
-    // Связь с пользователем
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Метод добавления сотрудника с аватаром
-     * @param $request - объект запроса
-     * @param string|null $avatarFileName - имя файла аватара
-     * @return Employee|null
-     */
-    public static function addEmployee($request, $avatarFileName = null)
+    public static function createEmployee(array $data, ?array $file = null): array
     {
-        if ($request->method === 'POST') {
-            // Проверяем, есть ли пользователь с таким логином
-            $existingUser = User::where('login', $request->get('login'))->first();
-            if ($existingUser) {
-                return null; // Логин занят
-            }
+        $validator = new Validator($data, [
+            'last_name' => ['required'],
+            'first_name' => ['required'],
+            'login' => [ 'login', 'unique:users,login', 'required'],
+            'password' => ['required', 'password'],
+        ], [
+            'required' => 'Поле :field обязательно для заполнения',
+            'unique' => 'Поле :field должно быть уникальным',
+            'password' => 'Пароль должен содержать минимум 6 символов, одну заглавную букву и одну цифру',
+            'login' => 'Логин может содержать только латинские буквы, цифры, символы "_" и "-", и не должно содержать кириллицу',
+        ]);
 
-            // Создаём пользователя (пароль хешируется в модели User)
+        if ($validator->fails()) {
+            return [
+                'success' => false,
+                'errors' => $validator->errors(),
+                'employee' => null
+            ];
+        }
+
+
+        $avatarFileName = self::uploadAvatar($file);
+
+        try {
             $user = User::create([
-                'login' => $request->get('login'),
-                'password' => $request->get('password'),
+                'login' => $data['login'],
+                'password' => $data['password'], // без md5, модель сделает md5 сама
                 'role' => 'employee',
             ]);
 
+
+
             if (!$user) {
-                return null;
+                throw new \Exception('Не удалось создать пользователя');
             }
 
-            // Создаём сотрудника с привязкой к пользователю и аватаром
             $employee = self::create([
-                'last_name' => $request->get('last_name'),
-                'first_name' => $request->get('first_name'),
-                'patronym' => $request->get('patronym'),
+                'last_name' => $data['last_name'],
+                'first_name' => $data['first_name'],
+                'patronym' => $data['patronym'] ?? null,
                 'created_by' => Auth::user()->id,
                 'user_id' => $user->id,
                 'avatar' => $avatarFileName,
             ]);
 
-            return $employee;
+            return ['success' => true, 'errors' => null, 'employee' => $employee];
+        } catch (\Exception $e) {
+            return ['success' => false, 'errors' => ['database' => ['Ошибка при сохранении: ' . $e->getMessage()]], 'employee' => null];
         }
-        return null;
     }
 
-    /**
-     * Метод для получения пути к аватару сотрудника
-     * Если аватар не загружен или файл отсутствует - возвращает путь к дефолтному изображению
-     * @return string
-     */
-    public function getAvatarPath()
+    public static function uploadAvatar(?array $file): string
+    {
+        if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
+            return 'default-avatar.svg';
+        }
+
+        $uploadDir = __DIR__ . '/../../public/uploads/avatars/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $fileName = uniqid('avatar_') . '.' . $extension;
+
+        move_uploaded_file($file['tmp_name'], $uploadDir . $fileName);
+
+        return $fileName;
+    }
+
+    public function getAvatarPath(): string
     {
         $avatarDir = __DIR__ . '/../../public/uploads/avatars/';
         if ($this->avatar && file_exists($avatarDir . $this->avatar)) {
@@ -85,35 +111,12 @@ class Employee extends Model
         return '/polyclinic/public/assets/images/default-avatar.svg';
     }
 
-    public static function syncEmployees()
-    {
-        // Получаем всех пользователей с ролью employee
-        $users = User::where('role', 'employee')->get();
-
-        foreach ($users as $user) {
-            // Проверяем, существует ли запись в таблице employee
-            $employee = self::where('user_id', $user->id)->first();
-            if (!$employee) {
-                // Создаем запись в таблице employee
-                self::create([
-                    'last_name' => 'Не указано',
-                    'first_name' => 'Не указано',
-                    'patronym' => 'Не указано',
-                    'created_by' => 1, // ID администратора
-                    'user_id' => $user->id
-                ]);
-            }
-        }
-    }
-
-    // Метод для получения сотрудников с данными пользователей
     public static function getEmployeesWithUser()
     {
         return self::with('user')->get();
     }
 
-    // Метод для удаления сотрудника
-    public static function deleteEmployee($id)
+    public static function deleteEmployee($id): bool
     {
         $employee = self::find($id);
         if ($employee) {
@@ -122,5 +125,4 @@ class Employee extends Model
         }
         return false;
     }
-
 }

@@ -12,6 +12,10 @@ return [
     'validators' => [
         'login' => \Validators\LoginValidator::class,
         'password' => \Validators\PasswordValidator::class,
+        'required' => \Validators\RequireValidator::class,
+        'unique' => \Validators\UniqueValidator::class,
+        'age' => \Validators\AgeValidator::class
+
     ],
     'routeAppMiddleware' => [
         'trim' => \Middlewares\TrimMiddleware::class,

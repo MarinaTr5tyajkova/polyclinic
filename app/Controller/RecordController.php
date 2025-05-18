@@ -45,26 +45,28 @@ class RecordController
     {
         $doctors = Doctor::all();
         $patients = Patient::all();
-
         $message = null;
+        $form_data = [];
 
         if ($request->method === 'POST') {
-            $data = [
-                'employee_id' => Auth::user()->id,
-                'doctor_id' => $request->get('doctor_id'),
-                'patient_id' => $request->get('patient_id'),
-                'record_date' => $request->get('record_date'),
-                'record_time' => $request->get('record_time'),
-                'status' => $request->get('status') ?? 'complete',
-            ];
+            $form_data = $request->all();
 
-            // Простая валидация
-            if (!$data['doctor_id'] || !$data['patient_id'] || !$data['record_date'] || !$data['record_time']) {
-                $message = 'Пожалуйста, заполните все обязательные поля.';
-            } else {
-                Record::create($data);
-                header('Location: /record');
-                exit();
+            try {
+                $record = Record::create([
+                    'employee_id' => Auth::user()->id,
+                    'doctor_id' => $request->get('doctor_id'),
+                    'patient_id' => $request->get('patient_id'),
+                    'record_date' => $request->get('record_date'),
+                    'record_time' => $request->get('record_time'),
+                    'status' => $request->get('status') ?? 'complete',
+                ]);
+
+                if ($record) {
+                    header('Location: /polyclinic/record');
+                    exit();
+                }
+            } catch (\Exception $e) {
+                $message = 'Ошибка при создании записи: ' . $e->getMessage();
             }
         }
 
@@ -72,6 +74,7 @@ class RecordController
             'doctors' => $doctors,
             'patients' => $patients,
             'message' => $message,
+            'form_data' => $form_data,
         ]);
     }
 }

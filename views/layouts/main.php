@@ -24,7 +24,7 @@ $avatarPath = $employee ? $employee->getAvatarPath() : '/polyclinic/public/asset
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Онлайн-регистратура</title>
-    <link rel="stylesheet" href="/polyclinic/public/assets/css/main.css?v=1.8.12" />
+    <link rel="stylesheet" href="/polyclinic/public/assets/css/main.css?v=1.8.13" />
 </head>
 <body class="<?= $isLoginPage ? 'login-page' : '' ?>">
 <?php if (!$isLoginPage && !$isEmployeePage): ?>

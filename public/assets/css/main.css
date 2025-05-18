@@ -441,3 +441,14 @@ p {
 .record-formw button[type="submit"]:hover {
     background-color: #22b883;
 }
+
+.form-group.has-error input {
+    border-color: #dc3545;
+    box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}

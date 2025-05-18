@@ -10,18 +10,37 @@ class DoctorController
 {
     public function doctor(Request $request): string
     {
+        $message = null;
+        $errors = null;
+        $form_data = [];
+
         if ($request->method === 'POST') {
             if ($request->has('delete_id')) {
                 Doctor::deleteDoctor($request->get('delete_id'));
+                $message = 'Врач удалён';
             } elseif ($request->has('last_name') && $request->has('first_name') && $request->has('specialization')) {
-                Doctor::addDoctor($request->all());
+                $form_data = $request->all();
+                $result = Doctor::addDoctorWithValidation($form_data);
+
+                if ($result['success']) {
+                    $message = 'Врач успешно добавлен';
+                    $form_data = []; // очистить форму после успешного добавления
+                } else {
+                    $errors = $result['errors'];
+                }
             }
-            // После добавления или удаления можно сделать редирект или обновить список
-            app()->route->redirect('/doctor');
+            // Можно убрать редирект, чтобы показывать ошибки и форму с сохранёнными данными
+            // app()->route->redirect('/doctor');
         }
 
         $doctors = Doctor::all();
-        return (new View())->render('site.doctor', ['doctors' => $doctors]);
+
+        return (new View())->render('site.doctor', [
+            'doctors' => $doctors,
+            'message' => $message,
+            'errors' => $errors,
+            'form_data' => $form_data,
+        ]);
     }
 
     public function search(Request $request): string
@@ -34,4 +53,3 @@ class DoctorController
         ]);
     }
 }
-
