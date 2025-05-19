@@ -21,18 +21,18 @@
     <div class="login-title">Для начала работы войдите в систему</div>
 
     <?php if (!empty($message)): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($message) ?></div>
+        <div class="alert alert-danger"><?= htmlspecialchars($message, ENT_QUOTES | ENT_HTML5) ?></div>
     <?php endif; ?>
 
-    <form class="login-form" method="POST" action="<?= app()->route->getUrl('/login') ?>">
-        <input type="hidden" name="csrf_token" value="<?= \Src\Auth\Auth::generateCSRF() ?>">
+    <form class="login-form" method="POST" action="<?= htmlspecialchars(app()->route->getUrl('/login'), ENT_QUOTES | ENT_HTML5) ?>">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(\Src\Auth\Auth::generateCSRF(), ENT_QUOTES | ENT_HTML5) ?>">
 
         <div class="form-group">
-            <input type="text" id="login" name="login" placeholder="Логин" required class="form-input">
+            <input type="text" id="login" name="login" placeholder="Логин" required autocomplete="username" class="form-input">
         </div>
 
         <div class="form-group">
-            <input type="password" id="password" name="password" placeholder="Пароль" required class="form-input">
+            <input type="password" id="password" name="password" placeholder="Пароль" required autocomplete="current-password" class="form-input">
         </div>
 
         <button type="submit" class="login-button">Войти</button>
