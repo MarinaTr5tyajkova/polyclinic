@@ -16,22 +16,29 @@ class PatientController
 
         if ($request->method === 'POST') {
             if ($request->has('delete_id')) {
-                Patient::deletePatient($request->get('delete_id'));
-                $message = 'Пациент удалён';
-            } elseif ($request->has('last_name') && $request->has('first_name') && $request->has('birthday')) {
+                $deleted = Patient::deleteById($request->get('delete_id'));
+                $message = $deleted ? 'Пациент удалён' : 'Пациент не найден';
+
+                // После удаления можно сделать редирект, чтобы избежать повторного удаления при обновлении
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit;
+            } else {
                 $form_data = $request->all();
-                $result = Patient::addPatientWithValidation($form_data);
+
+                $result = Patient::createWithValidation($form_data);
 
                 if ($result['success']) {
-                    $message = 'Пациент успешно добавлен';
-                    $form_data = []; // очистить форму после успешного добавления
+                    // После успешного добавления делаем редирект, чтобы избежать повторного добавления при обновлении страницы
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
                 } else {
                     $errors = $result['errors'];
+                    $form_data = $request->all(); // сохранить введённые данные для отображения формы
                 }
             }
         }
 
-        $patients = Patient::all();
+        $patients = Patient::getAll();
 
         return (new View())->render('site.patient', [
             'patients' => $patients,

@@ -10,6 +10,11 @@
             font-size: 0.875em;
             margin-top: 0.25rem;
         }
+        .success-message {
+            color: #28a745;
+            font-size: 1em;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -79,6 +84,10 @@
         <div class="add-form">
             <h3>Добавить нового сотрудника</h3>
 
+            <?php if (!empty($message)): ?>
+                <div class="success-message"><?= htmlspecialchars($message) ?></div>
+            <?php endif; ?>
+
             <form method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="text" name="last_name" placeholder="Фамилия"
@@ -109,10 +118,10 @@
     </div>
 </div>
 
-<?php if (!empty($message)): ?>
+<?php if (!empty($errors)): ?>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const errors = <?= $message ?>;
+            const errors = <?= json_encode($errors, JSON_UNESCAPED_UNICODE) ?>;
             const fieldMap = {
                 'last_name': 'Фамилия',
                 'first_name': 'Имя',
@@ -123,35 +132,29 @@
             // Удаляем старые сообщения об ошибках
             document.querySelectorAll('.error-message').forEach(el => el.remove());
 
-            if (errors) {
-                Object.entries(errors).forEach(([field, messages]) => {
-                    const input = document.querySelector(`[name="${field}"]`);
-                    if (input) {
-                        const container = input.closest('.form-group');
-                        messages.forEach(msg => {
-                            const errorEl = document.createElement('div');
-                            errorEl.className = 'error-message';
-                            errorEl.textContent = msg.replace(':field', fieldMap[field] || field);
-                            container.appendChild(errorEl);
-                        });
-                    } else if (field === 'database') {
-                        // Общие ошибки, не привязанные к полям
-                        const form = document.querySelector('.add-form');
-                        messages.forEach(msg => {
-                            const errorEl = document.createElement('div');
-                            errorEl.className = 'error-message';
-                            errorEl.textContent = msg;
-                            form.prepend(errorEl);
-                        });
-                    }
-                });
-            }
+            Object.entries(errors).forEach(([field, messages]) => {
+                const input = document.querySelector(`[name="${field}"]`);
+                if (input) {
+                    const container = input.closest('.form-group');
+                    messages.forEach(msg => {
+                        const errorEl = document.createElement('div');
+                        errorEl.className = 'error-message';
+                        errorEl.textContent = msg.replace(':field', fieldMap[field] || field);
+                        container.appendChild(errorEl);
+                    });
+                } else if (field === 'database') {
+                    const form = document.querySelector('.add-form');
+                    messages.forEach(msg => {
+                        const errorEl = document.createElement('div');
+                        errorEl.className = 'error-message';
+                        errorEl.textContent = msg;
+                        form.prepend(errorEl);
+                    });
+                }
+            });
         });
     </script>
 <?php endif; ?>
-
-
-
 
 </body>
 </html>

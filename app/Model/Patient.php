@@ -21,16 +21,31 @@ class Patient extends Model
     ];
 
     /**
-     * Добавление пациента с валидацией
+     * Очистка пробелов у всех строковых полей
+     */
+    protected static function trimData(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $data[$key] = trim($value);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Создание пациента с валидацией и очисткой
      * @param array $data
      * @return array ['success' => bool, 'errors' => array|null, 'patient' => Patient|null]
      */
-    public static function addPatientWithValidation(array $data): array
+    public static function createWithValidation(array $data): array
     {
+        $data = self::trimData($data);
+
         $validator = new Validator($data, [
             'last_name' => ['required'],
             'first_name' => ['required'],
-            'birthday' => ['required', 'age:18'], // обязательное поле и проверка возраста от 18 лет
+            'birthday' => ['required', 'age:18'],
         ], [
             'required' => 'Поле :field обязательно для заполнения',
             'age' => 'Возраст должен быть не менее 18 лет',
@@ -58,7 +73,12 @@ class Patient extends Model
         ];
     }
 
-    public static function deletePatient($id): bool
+    /**
+     * Удаление пациента по ID
+     * @param int $id
+     * @return bool
+     */
+    public static function deleteById($id): bool
     {
         $patient = self::find($id);
         if ($patient) {
@@ -67,6 +87,20 @@ class Patient extends Model
         return false;
     }
 
+    /**
+     * Получить всех пациентов
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getAll()
+    {
+        return self::all();
+    }
+
+    /**
+     * Поиск пациентов по ФИО с поддержкой нескольких слов
+     * @param string $query
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public static function searchByFullName(string $query)
     {
         $query = trim($query);

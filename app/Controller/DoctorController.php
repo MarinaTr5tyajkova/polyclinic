@@ -16,24 +16,30 @@ class DoctorController
 
         if ($request->method === 'POST') {
             if ($request->has('delete_id')) {
-                Doctor::deleteDoctor($request->get('delete_id'));
-                $message = 'Врач удалён';
-            } elseif ($request->has('last_name') && $request->has('first_name') && $request->has('specialization')) {
+                $deleted = Doctor::deleteById($request->get('delete_id'));
+                $message = $deleted ? 'Врач удалён' : 'Врач не найден';
+
+                // Редирект после удаления, чтобы избежать повторного удаления при обновлении страницы
+                header('Location: ' . $_SERVER['REQUEST_URI']);
+                exit;
+            } else {
                 $form_data = $request->all();
-                $result = Doctor::addDoctorWithValidation($form_data);
+
+                $result = Doctor::createWithValidation($form_data);
 
                 if ($result['success']) {
-                    $message = 'Врач успешно добавлен';
-                    $form_data = []; // очистить форму после успешного добавления
+                    // Редирект после успешного добавления, чтобы избежать повторного добавления при обновлении страницы
+                    header('Location: ' . $_SERVER['REQUEST_URI']);
+                    exit;
                 } else {
                     $errors = $result['errors'];
+                    // Сохраняем данные формы для повторного отображения
+                    $form_data = $request->all();
                 }
             }
-            // Можно убрать редирект, чтобы показывать ошибки и форму с сохранёнными данными
-            // app()->route->redirect('/doctor');
         }
 
-        $doctors = Doctor::all();
+        $doctors = Doctor::getAll();
 
         return (new View())->render('site.doctor', [
             'doctors' => $doctors,
@@ -47,6 +53,7 @@ class DoctorController
     {
         $query = $request->get('search_query', '');
         $doctors = Doctor::searchByQuery($query);
+
         return (new View())->render('site.doctor', [
             'doctors' => $doctors,
             'search_query' => $query

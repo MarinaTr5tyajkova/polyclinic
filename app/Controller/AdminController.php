@@ -15,8 +15,7 @@ class AdminController
             return (new View())->render('errors.403');
         }
 
-        $employees = Employee::getEmployeesWithUser() ?? [];
-        $message = null;
+        $errors = null;
         $form_data = $request->all();
 
         if ($request->method === 'POST') {
@@ -31,18 +30,22 @@ class AdminController
                     header('Location: /polyclinic/admin/employees?message=' . urlencode('Сотрудник успешно добавлен'));
                     exit;
                 } else {
-                    $message = json_encode($result['errors'], JSON_UNESCAPED_UNICODE);
+                    $errors = $result['errors']; // Передаём массив ошибок
                 }
             }
         }
 
-        // Добавляем обработку сообщений из URL
+        // Сообщения успеха из URL (если нужны)
+        $message = null;
         if ($request->has('message')) {
-            $message = json_encode(['success' => urldecode($request->get('message'))], JSON_UNESCAPED_UNICODE);
+            $message = urldecode($request->get('message'));
         }
+
+        $employees = Employee::getEmployeesWithUser();
 
         return (new View())->render('site.employees', [
             'employees' => $employees,
+            'errors' => $errors,
             'message' => $message,
             'form_data' => $form_data,
             'fieldNames' => [

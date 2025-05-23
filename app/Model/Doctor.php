@@ -23,17 +23,33 @@ class Doctor extends Model
     ];
 
     /**
-     * Добавление врача с валидацией
+     * Очистка пробелов у всех строковых полей
+     */
+    protected static function trimData(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $data[$key] = trim($value);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Создание врача с валидацией и очисткой данных
      * @param array $data
      * @return array ['success' => bool, 'errors' => array|null, 'doctor' => Doctor|null]
      */
-    public static function addDoctorWithValidation(array $data): array
+    public static function createWithValidation(array $data): array
     {
+        // Очистка пробелов (если middleware не сработал, на всякий случай)
+        $data = self::trimData($data);
+
         $validator = new Validator($data, [
             'last_name' => ['required'],
             'first_name' => ['required'],
             'specialization' => ['required'],
-            'birthday' => ['required', 'age:18'], // обязательное поле и проверка возраста от 18 лет
+            'birthday' => ['required', 'age:18'],
             'post' => ['required'],
         ], [
             'required' => 'Поле :field обязательно для заполнения',
@@ -64,7 +80,12 @@ class Doctor extends Model
         ];
     }
 
-    public static function deleteDoctor($id)
+    /**
+     * Удаление врача по ID
+     * @param int $id
+     * @return bool
+     */
+    public static function deleteById($id): bool
     {
         $doctor = self::find($id);
         if ($doctor) {
@@ -73,7 +94,20 @@ class Doctor extends Model
         return false;
     }
 
-// Поиск врачей по запросу (фамилия, имя, отчество, специализация, должность)
+    /**
+     * Получить всех врачей
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getAll()
+    {
+        return self::all();
+    }
+
+    /**
+     * Поиск врачей по запросу (фамилия, имя, отчество, специализация, должность)
+     * @param string $query
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public static function searchByQuery(string $query)
     {
         $query = trim($query);
@@ -94,15 +128,3 @@ class Doctor extends Model
         })->get();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

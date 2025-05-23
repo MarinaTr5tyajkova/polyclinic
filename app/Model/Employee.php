@@ -30,12 +30,33 @@ class Employee extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Очищает пробелы у всех строковых полей
+     */
+    protected static function trimData(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $data[$key] = trim($value);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Создаёт сотрудника с валидацией, загрузкой аватара и созданием пользователя
+     * @param array $data
+     * @param array|null $file
+     * @return array ['success' => bool, 'errors' => array|null, 'employee' => Employee|null]
+     */
     public static function createEmployee(array $data, ?array $file = null): array
     {
+        $data = self::trimData($data);
+
         $validator = new Validator($data, [
             'last_name' => ['required'],
             'first_name' => ['required'],
-            'login' => [ 'login', 'unique:users,login', 'required'],
+            'login' => ['login', 'unique:users,login', 'required'],
             'password' => ['required', 'password'],
         ], [
             'required' => 'Поле :field обязательно для заполнения',
@@ -52,17 +73,14 @@ class Employee extends Model
             ];
         }
 
-
         $avatarFileName = self::uploadAvatar($file);
 
         try {
             $user = User::create([
                 'login' => $data['login'],
-                'password' => $data['password'], // без md5, модель сделает md5 сама
+                'password' => $data['password'], // модель User должна сама хешировать пароль
                 'role' => 'employee',
             ]);
-
-
 
             if (!$user) {
                 throw new \Exception('Не удалось создать пользователя');
@@ -83,6 +101,11 @@ class Employee extends Model
         }
     }
 
+    /**
+     * Загрузка аватара, возвращает имя файла или дефолт
+     * @param array|null $file
+     * @return string
+     */
     public static function uploadAvatar(?array $file): string
     {
         if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
@@ -102,6 +125,10 @@ class Employee extends Model
         return $fileName;
     }
 
+    /**
+     * Получить путь к аватару
+     * @return string
+     */
     public function getAvatarPath(): string
     {
         $avatarDir = __DIR__ . '/../../public/uploads/avatars/';
@@ -111,11 +138,20 @@ class Employee extends Model
         return '/polyclinic/public/assets/images/default-avatar.svg';
     }
 
+    /**
+     * Получить всех сотрудников с пользователями
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public static function getEmployeesWithUser()
     {
         return self::with('user')->get();
     }
 
+    /**
+     * Удалить сотрудника и связанного пользователя
+     * @param int $id
+     * @return bool
+     */
     public static function deleteEmployee($id): bool
     {
         $employee = self::find($id);
