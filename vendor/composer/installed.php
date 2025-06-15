@@ -3,7 +3,7 @@
         'name' => 'marinatr5tyajkova/polyclinic',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd80545189fb745a8c2633dc01b4f494c134afdd4',
+        'reference' => '3d27584c484bd390beefaf460f677b454ef90a68',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -130,7 +130,7 @@
         'marinatr5tyajkova/polyclinic' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd80545189fb745a8c2633dc01b4f494c134afdd4',
+            'reference' => '3d27584c484bd390beefaf460f677b454ef90a68',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

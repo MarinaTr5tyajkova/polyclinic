@@ -1,0 +1,22 @@
+{
+    "name": "marinatr5tyajkova/polyclinic",
+    "description": "mvc framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "MarinaTr5tyakova",
+            "email": "tretyakowamarina26@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+}

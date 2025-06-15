@@ -21,6 +21,14 @@ return [
         'trim' => \Middlewares\TrimMiddleware::class,
         'specialChars' => \Middlewares\SpecialCharsMiddleware::class,
         'csrf' => \Middlewares\CSRFMiddleware::class,
+        'bearer' => Middlewares\BearerTokenMiddleware::class,
+    ],
+
+    'providers' => [
+        'kernel' => \App\Providers\KernelProvider::class,
+        'route' => \App\Providers\RouteProvider::class,
+        'db' => \App\Providers\DBProvider::class,
+        'auth' => \App\Providers\AuthProvider::class,
     ],
 
 

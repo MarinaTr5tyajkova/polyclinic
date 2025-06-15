@@ -3,6 +3,7 @@ namespace Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Src\Auth\IdentityInterface;
+use DateTime;
 
 class User extends Model implements IdentityInterface
 {
@@ -12,7 +13,6 @@ class User extends Model implements IdentityInterface
     protected static function booted()
     {
         static::creating(function ($user) {
-            // Хешируем пароль только если он не является MD5 (32 символа, hex)
             if (strlen($user->password) !== 32 || !ctype_xdigit($user->password)) {
                 $user->password = self::hashPassword($user->password);
             }
@@ -26,7 +26,6 @@ class User extends Model implements IdentityInterface
             }
         });
     }
-
 
     public static function hashPassword($password): string
     {
@@ -83,10 +82,37 @@ class User extends Model implements IdentityInterface
         return $this->role ? ucfirst($this->role) : 'Unknown';
     }
 
-    // Добавьте этот метод для связи с моделью Employee
+    // Связь с моделью Employee
     public function employee()
     {
-        // Предполагается, что таблица employees имеет поле user_id, ссылающееся на users.id
         return $this->hasOne(Employee::class, 'user_id', 'id');
+    }
+
+    /**
+     * Генерирует уникальный токен для пользователя и сохраняет в базе
+     * @return string
+     * @throws \Exception
+     */
+    public function generateToken(): string
+    {
+        $token = bin2hex(random_bytes(32)); // 64 символа
+        $expiresAt = (new DateTime('+1 day'))->format('Y-m-d H:i:s');
+
+        // Создаём запись в таблице api_tokens
+        ApiToken::create([
+            'user_id' => $this->id,
+            'token' => $token,
+            'expires_at' => $expiresAt,
+        ]);
+
+        return $token;
+    }
+
+    /**
+     * Связь с токенами API
+     */
+    public function apiTokens()
+    {
+        return $this->hasMany(ApiToken::class, 'user_id', 'id');
     }
 }
